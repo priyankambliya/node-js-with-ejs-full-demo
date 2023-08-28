@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>javascript</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS v5.2.0-beta1 -->
+    <%- include('../views/cdn-file.ejs') %>
+
+</head>
+
+<body>
+
+    <%- include('../views/header.ejs') %>
+
+        <main>
+            <div class="container" style="margin-top: 10px;">
+                <div class="row">
+                    <div class="col-8"></div>
+                    <div class="col-3">
+                        <input type="text" class="form-control" id="search">
+                    </div>
+                    <div class="col-1">
+                        <button class="btn btn-secondary" id="btn">
+                            search
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive m-1">
+                <form action="/api/admin/success-post" method="post">
+                    <table class="table border-dark" style="margin-top: 20px;">
+                        <thead style="border-width: 1px;">
+                            <tr style="border-width: 1px;">
+                                <th style="border-width: 1px;" class="border-1 border-black">id</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">title</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">description</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">image</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">location</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">created-By</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">created-At</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">status</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">Button</th>
+                            </tr>
+                        </thead>
+                        <!-- TBODY CODE -->
+                        <tbody id="tbody">
+                            <% if(posts.length) { %>
+                                <% let auto_Id=0; if(auto_Id <=posts.length){ %>
+                                    <% posts.forEach( (posts)=> { %>
+                                        <tr style="border-width: 1px;">
+                                            <% auto_Id++ %>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= auto_Id %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= posts.title %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= posts.description %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <img style="border-radius: 5px;" src=<%=posts.image %> alt="text
+                                                    related
+                                                    to
+                                                    image"
+                                                    width="42" height="42">
+
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= posts.loc.coordinates %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= posts.user_info.username %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= posts.createdAt %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= posts.status %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <button type="submit" style="width: 100%;" class="btn   btn-dark"
+                                                        name="id" value="<%= posts._id %>">Submit</button>
+                                                </td>
+                                        </tr>
+                                        <% }) %>
+                                            <% auto_Id++ %>
+                                                <% } %>
+                                                    <% } %>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+
+            <!-- Display the pagination -->
+            <div id="main-pagination-div">
+                <div class="pagination" style="justify-content: center;" id="pagination">
+                    <% if( page> 1){ %>
+                        <a class="page-link" href="/api/admin/posts?page=<%= page - 1 %>">Previous</a>
+                        <% } %>
+                            <% for(let i=1 ; i <=totalPage ; i++){ %>
+                                <% if(i===page){ %>
+                                    <li class="current-page" style="border: 1px solid black; padding: 7px 17px;">
+                                        <%= i %>
+                                    </li>
+                                    <% }else{ %>
+                                        <a class="page-link" href="/api/admin/posts?page=<%= i %>">
+                                            <%= i %>
+                                        </a>
+                                        <% } %>
+                                            <% } %>
+                                                <% if( page < totalPage){ %>
+                                                    <a class="page-link"
+                                                        href="/api/admin/posts?page=<%= page + 1 %>">NEXT</a>
+                                                    <% } %>
+                </div>
+            </div>
+            </nav>
+        </main>
+        <footer>
+        </footer>
+        <script>
+            $(document).ready(function () {
+
+                $('#btn').click(function () {
+
+                    var searchQuery = $('#search').val();
+                    $.ajax({
+                        url: "http://localhost:4000/api/admin/action",
+                        method: "POST",
+                        data: { title: 'search', search: searchQuery },
+                        dataType: "JSON",
+                        success: function (data) {
+                            alert(data)
+                            // ============================== THIS IS CODE FOR PAGINATION =================================== //
+                            var pagination = '';
+                            if (data.dataCount.length < 3) {
+                                pagination += ``;
+                            } else {
+                                if (data.pageCount > 1) {
+                                    pagination += `<button class="page-link" value="${data.pageCount - 1}">Previous</button>`;
+                                }
+                                for (let i = 1; i <= data.totalPageCount; i++) {
+
+                                    if (data.pageCount === i) {
+                                        pagination += `<button class="current-page page-link" style="border: 1px solid black; padding: 7px 17px;">
+			                            ${i}
+			                        </button>`;
+                                    }
+                                    else {
+                                        pagination += `<button class="page-link" value="${i}">
+			                            ${i}
+			                        </button>`;
+                                    }
+                                }
+                                if (data.pageCount < data.totalPageCount) {
+                                    pagination += `<button class="page-link"
+			                        value=${data.pageCount + 1}">NEXT</button>`
+                                }
+                            }
+
+                            $('#pagination').html(pagination);
+
+                            // ============================== THIS IS CODE FOR TBODY =================================== //
+                            var html = '';
+                            if (data.dataCount.length > 0) {
+                                for (var count = 0; count < data.dataCount.length; count++) {
+
+                                    html += `
+                                    <tr>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${count + 1}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].title}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].description}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            <img style="border-radius: 5px;" src="${data.dataCount[count].image}" alt="text related to image" width="42" height="42">
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].loc.coordinates}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].user_info.username}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].createdAt}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].status}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            <button type="submit" style="width: 100%;" class="btn btn-dark" name="id" value="${data.dataCount[count]._id}">Submit</button>
+                                        </td>
+                                    </tr>
+                                `;
+                                }
+                            }
+
+                            $('#tbody').html(html);
+                        }
+                    });
+                });
+
+                //======================================================================================================================================
+
+                function getValue() {
+                    let pageIndex = $(this).val();
+                    var searchQuery = $('#search').val();
+                    $.ajax({
+                        url: "http://localhost:4000/api/admin/action",
+                        method: "POST",
+                        data: { title: 'search', search: searchQuery, pageIndex },
+                        dataType: "JSON",
+                        success: function (data) {
+
+                            // ============================== THIS IS CODE FOR PAGINATION =========================== //
+                            var pagination = '';
+                            if (data.dataCount.length < 3) {
+                                pagination += ``;
+                            } else {
+                                if (data.pageCount > 1) {
+                                    pagination += `<button class="page-link pagies" value="${data.pageCount - 1}">Previous</button>`;
+                                }
+                                for (let i = 1; i <= data.totalPageCount; i++) {
+
+                                    if (data.pageCount === i) {
+                                        pagination += `<button class="current-page page-link pagies" value="${i}" style="border: 1px solid black; padding: 7px 17px;">
+			                            ${i}
+			                        </button>`;
+                                    }
+                                    else {
+                                        pagination += `<button class="page-link pagies" value="${i}">
+			                            ${i}
+			                        </button>`;
+                                    }
+                                }
+                                if (data.pageCount < data.totalPageCount) {
+                                    pagination += `<button class="page-link pagies" value="${data.pageCount + 1}">NEXT</button>`
+                                }
+                            }
+
+                            $('#pagination').html(pagination);
+
+                            // ============================== THIS IS CODE FOR TBODY ============================== //
+                            var html = '';
+                            if (data.dataCount.length > 0) {
+                                for (var count = 0; count < data.dataCount.length; count++) {
+
+                                    html += `
+                                    <tr>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${count + 1}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].title}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].description}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            <img style="border-radius: 5px;" src="${data.dataCount[count].image}" alt="text related to image" width="42" height="42">
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].loc.coordinates}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].user_info.username}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].createdAt}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            ${data.dataCount[count].status}
+                                        </td>
+                                        <td style="border-width: 1px;" class="border-1 border-black">
+                                            <button type="submit" style="width: 100%;" class="btn btn-dark" name="id" value="${data.dataCount[count]._id}">Submit</button>
+                                        </td>
+                                    </tr>
+                                `;
+                                }
+                            }
+
+                            $('#tbody').html(html);
+                        }
+                    });
+                }
+                $(document).on('click', 'button', getValue);
+            });
+        </script>
+
+</body>
+
+</html>

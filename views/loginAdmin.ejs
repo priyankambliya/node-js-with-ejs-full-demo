@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>profile-Admin</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS v5.2.0-beta1 -->
+    <%- include('../views/cdn-file.ejs') %>
+
+</head>
+
+<body>
+    <div id="main-container" style="border: 1px solid black;margin: 50px 550px;border-radius: 6px;">
+        <h1 style="text-align: center;margin-top: 10%;">Admin Log In</h1>
+        <form action="/api/admin/login" class="border-1" method="post"
+            style="max-width: 400px;margin: auto;padding: 20px;">
+            <div class="row g-3 align-items-center">
+                <div class="col-12">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" aria-describedby="email" name="email">
+                </div>
+                <div class="col-12">
+                    <label for="password">password</label>
+                    <input type="password" id="password" class="form-control" name="password"
+                        aria-describedby="passwordHelpInline">
+                </div>
+                <div class="col-12">
+                    <button type="submit" style="margin-left: 30%;padding: 8px 43px;margin-top: 20px;"
+                        class="btn btn-primary"><i class="fa-solid fa-arrow-right-to-bracket"
+                            style="margin-right: 8px;"></i></button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <footer>
+    </footer>
+</body>
+
+</html>

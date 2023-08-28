@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Users</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS v5.2.0-beta1 -->
+    <%- include('../views/cdn-file.ejs') %>
+
+</head>
+
+<body>
+    <%- include('../views/header.ejs') %>
+
+        <div class="container-fluid">
+            <div class="container">
+                <div class="row">
+                    <div class="col-6"></div>
+                    <div class="col-6">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="container" style="margin-top: 10px;">
+                                    <div class="row">
+                                        <div class="col-8"><input type="text" class="form-control" id="search-user">
+                                        </div>
+                                        <div class="col-4">
+                                            <button class="btn btn-secondary" id="find-btn">
+                                                search
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="filter" style="text-align: end;margin-top: 10px;" class="col-6">
+                                <div class="dropdown">
+                                    <button id="btn-search" class="btn btn-secondary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <p style="display: inline-block;margin: 0px;">Search</p>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li><button style="width: 100%;border-radius: 10px;border: 10px;" value="Active"
+                                                class="search-btn">Active</button>
+                                        </li>
+                                        <li><button style="width: 100%;border-radius: 10px;border: 10px;"
+                                                value="Blocked" class="search-btn">Blocked</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <main>
+            <div class="table-responsive m-1">
+                <form action="/api/admin/success" method="post">
+                    <table id="table-div" class="table border-dark" style="margin-top: 20px;">
+                        <thead style="border-width: 1px;">
+                            <tr style="border-width: 1px;">
+                                <th style="border-width: 1px;" class="border-1 border-black">id</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">username</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">email</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">location</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">Address</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">Image</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">mobile</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">status</th>
+                                <th style="border-width: 1px;" class="border-1 border-black">Action</th>
+                                <!-- <th style="border-width: 1px;" class="border-1 border-black">check box</th> -->
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            <% if(users.length) { %>
+                                <% let auto_Id=0; if(auto_Id <=users.length){ %>
+                                    <% users.forEach( (user)=> { %>
+                                        <tr style="border-width: 1px;">
+                                            <% auto_Id++ %>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= auto_Id %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= user.username %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= user.email %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= user.loc %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= user.address %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <img style="border-radius: 5px;" src=<%=user.image %> alt="text
+                                                    related
+                                                    to
+                                                    image"
+                                                    width="42" height="42">
+
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= user.mobile %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <%= user.status %>
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <button style="width: 100%;" type="submit" class="btn btn-dark"
+                                                        name="id" value="<%= user._id %>">Submit</button>
+                                                </td>
+                                                <!-- <td style="border-width: 1px;" class="border-1 border-black">
+                                        <input type="checkbox" name="status" id="status" class="m-auto">
+                                    </td> -->
+                                        </tr>
+                                        <% }) %>
+                                            <% auto_Id++ %>
+                                                <% } %>
+                                                    <% } %>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div id="main-pagination-div">
+                <div class="pagination" style="justify-content: center;" id="pagination">
+                    <% if( page> 1){ %>
+                        <a class="page-link" href="/api/admin/all-users?page=<%= page - 1 %>">Previous</a>
+                        <% } %>
+                            <% for(let i=1 ; i <=totalPage ; i++){ %>
+                                <% if(i===page){ %>
+                                    <li class="current-page" style="border: 1px solid black; padding: 7px 17px;">
+                                        <%= i %>
+                                    </li>
+                                    <% }else{ %>
+                                        <a class="page-link" href="/api/admin/all-users?page=<%= i %>">
+                                            <%= i %>
+                                        </a>
+                                        <% } %>
+                                            <% } %>
+                                                <% if( page < totalPage){ %>
+                                                    <a class="page-link"
+                                                        href="/api/admin/all-users?page=<%= page + 1 %>">NEXT</a>
+                                                    <% } %>
+                </div>
+            </div>
+        </main>
+        <footer>
+        </footer>
+        <script>
+            $(document).ready(function () {
+                $('#find-btn').click(function () {
+                    const search_value = $('#search-user').val();
+                    // alert(search_value)
+                    $.ajax({
+                        url: "http://localhost:4000/api/admin/user-data",
+                        method: "POST",
+                        data: { search_value },
+                        success: function (data) {
+                            var table = ''
+
+                            var pagination = '';
+                            if (data.users.length < 2) {
+                                pagination += ``;
+                            } else {
+                                if (data.pageCount > 1) {
+                                    pagination += `<button class="link-btn-p page-link" value="${data.pageCount - 1}">Previous</button>`;
+                                }
+                                for (let i = 1; i <= data.totalPageCount; i++) {
+
+                                    if (data.pageCount === i) {
+                                        pagination += `<button class="link-btn-p current-page page-link" style="border: 1px solid black; padding: 7px 17px;">
+			                            ${i}
+			                        </button>`;
+                                    }
+                                    else {
+                                        pagination += `<button class="link-btn-p page-link" value="${i}">
+			                            ${i}
+			                        </button>`;
+                                    }
+                                }
+                                if (data.pageCount < data.totalPageCount) {
+                                    pagination += `<button class="link-btn-p page-link"
+			                        value=${data.pageCount + 1}">NEXT</button>`
+                                }
+                            }
+
+                            $('#pagination').html(pagination);
+
+                            if (data.users.length > 0) {
+                                for (var count = 0; count < data.users.length; count++) {
+                                    table += `<tr style="border-width: 1px;">
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${count + 1} 
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].username} 
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].email}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].loc.coordinates}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].address}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <img style="border-radius: 5px;" src=${data.users[count].image} alt="text
+                                                    related
+                                                    to
+                                                    image"
+                                                    width="42" height="42">
+
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].mobile}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].status}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <button style="width: 100%;" type="submit" class="btn btn-dark"
+                                                        name="id" value="${data.users[count]._id}">Submit</button>
+                                                </td>
+                                            </tr>`;
+                                }
+                            }
+
+                            $('#tbody').html(table);
+                        }
+                    })
+                })
+                $('.search-btn').click(function () {
+                    const value = $(this).val();
+                    $.ajax({
+                        url: "http://localhost:4000/api/admin/user-data",
+                        method: "POST",
+                        data: { value },
+                        success: function (data) {
+                            var table = ''
+                            var btn_search = ''
+                            var pagination = ''
+
+                            btn_search += `<p style="display: inline-block;margin: 0px;">${value}</p>`;
+                            $('#btn-search').html(btn_search);
+
+                            if (data.total < 2) {
+                                pagination += ``;
+                            } else {
+                                if (data.pageCount > 1) {
+                                    pagination += `<button class="link-btn-p page-link" value="${data.pageCount - 1}">Previous</button>`;
+                                }
+                                for (let i = 1; i <= data.totalPageCount; i++) {
+
+                                    if (data.pageCount === i) {
+                                        pagination += `<button class="link-btn-p current-page page-link" style="border: 1px solid black; padding: 7px 17px;">
+			                            ${i}
+			                        </button>`;
+                                    }
+                                    else {
+                                        pagination += `<button class="link-btn-p page-link" value="${i}">
+			                            ${i}
+			                        </button>`;
+                                    }
+                                }
+                                if (data.pageCount < data.totalPageCount) {
+                                    pagination += `<button class="link-btn-p page-link"
+			                        value=${data.pageCount + 1}">NEXT</button>`
+                                }
+                            }
+
+                            $('#pagination').html(pagination);
+
+                            if (data.total > 0) {
+                                for (var count = 0; count < data.total; count++) {
+                                    table += `<tr style="border-width: 1px;">
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${count + 1} 
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].username} 
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].email}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].loc}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].address}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <img style="border-radius: 5px;" src=${data.users[count].image} alt="text
+                                                    related
+                                                    to
+                                                    image"
+                                                    width="42" height="42">
+
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].mobile}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].status}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <button style="width: 100%;" type="submit" class="btn btn-dark"
+                                                        name="id" value="${data.users[count]._id}">Submit</button>
+                                                </td>
+                                            </tr>`;
+                                }
+                            }
+
+                            $('#tbody').html(table);
+                        }
+                    })
+                })
+            })
+
+            $(document).on('click', '.link-btn-p', function () {
+                let pageIndex = $(this).val();
+                // var searchQuery = $('#search').val();
+                $.ajax({
+                    url: "http://localhost:4000/api/admin/user-data",
+                    method: "POST",
+                    data: { title: 'search', pageIndex },
+                    dataType: "JSON",
+                    success: function (data) {
+
+                        // ============================== THIS IS CODE FOR PAGINATION =========================== //
+                        var pagination = '';
+                        var table = '';
+                        if (data.total < 2) {
+                            pagination += ``;
+                        } else {
+                            if (data.pageCount > 1) {
+                                pagination += `<button class="link-btn-p page-link" value="${data.pageCount - 1}">Previous</button>`;
+                            }
+                            for (let i = 1; i <= data.totalPageCount; i++) {
+
+                                if (data.pageCount === i) {
+                                    pagination += `<button class="link-btn-p current-page page-link" style="border: 1px solid black; padding: 7px 17px;">
+			                            ${i}
+			                        </button>`;
+                                }
+                                else {
+                                    pagination += `<button class="link-btn-p page-link" value="${i}">
+			                            ${i}
+			                        </button>`;
+                                }
+                            }
+                            if (data.pageCount < data.totalPageCount) {
+                                pagination += `<button class="link-btn-p page-link"
+			                        value=${data.pageCount + 1}">NEXT</button>`
+                            }
+                        }
+
+                        $('#pagination').html(pagination);
+
+                        // ============================== THIS IS CODE FOR TBODY ============================== //
+                        if (data.users.length > 0) {
+                            for (var count = 0; count < data.users.length; count++) {
+                                table += `<tr style="border-width: 1px;">
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${count + 1} 
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].username} 
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].email}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].loc}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].address}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <img style="border-radius: 5px;" src=${data.users[count].image} alt="text
+                                                    related
+                                                    to
+                                                    image"
+                                                    width="42" height="42">
+
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].mobile}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    ${data.users[count].status}
+                                                </td>
+                                                <td style="border-width: 1px;" class="border-1 border-black">
+                                                    <button style="width: 100%;" type="submit" class="btn btn-dark"
+                                                        name="id" value="${data.users[count]._id}">Submit</button>
+                                                </td>
+                                            </tr>`;
+                            }
+                        }
+
+                        $('#tbody').html(table);
+                    }
+                });
+            })
+        </script>
+</body>
+
+</html>
